@@ -17,7 +17,6 @@ var spotify = new Spotify(keys.spotify);
       if (!error && response.statusCode === 200) {
         // console.log(error);
 
-      
         console.log("Title: " + JSON.parse(body).Title);
         console.log("\nRelease Year: " + JSON.parse(body).Year);
         console.log("\nIMDB Rating: " + JSON.parse(body).Ratings[0].Value);
@@ -31,8 +30,6 @@ var spotify = new Spotify(keys.spotify);
     }
   );
 };
-
-
 
 const addConcert = () => {
   request(
@@ -48,7 +45,6 @@ const addConcert = () => {
           console.log("Venue Location: " + parsedJSON[i].venue.city + ", " + parsedJSON[i].venue.region);
           console.log("Date of Event: " + moment(parsedJSON[i].datetime).format('MM DD YYYY'));
           console.log(" ");
-         
 
         }      
       }
@@ -57,21 +53,13 @@ const addConcert = () => {
   )};
 
 
-  switch (process.argv[2]) {
-    case "movie-this":
-      addMovie();
-      break;
-
-      case "concert-this":
-        addConcert();
-        break;
-  }
-  
+  var input = process.argv;
+  var command = input[2];
+  var name = "";
   
 
-var input = process.argv;
-var command = input[2];
-var name = "";
+const addSong = () => {
+
 
 for (i = 3; i < input.length; i++) {
 	name = name + " " + input[i];
@@ -101,41 +89,61 @@ if (command === "spotify-this-song") {
 	})
 
 }
+  };
 
 
-if (command === "do-what-it-says") {
-	fs.readFile("random.txt", "utf8", function(error, data) {
+const addFiles = () =>{
 
-		if (error) {
-			return console.log(error);
-		}
-		
-		var nameArr = data.split(",");
-		name = nameArr[1]
-	
-		spotify.search({ type: 'track', query: name, limit: 1 }, function(err, data) {
-			if (err) {
-				return console.log('Error occurred: ' + err);
-			}
-			
-			var track = data.tracks.items[0];
-			var randomSong =
-				"***********************************************************************************" + "\r\n" +
-				"Song Title: " + name + "\r\n" +
-				"Artist: " + track.artists[0].name + "\r\n" +
-				"Album: " + track.album.name + "\r\n" + 
-				"Preview Link: " + track.preview_url + "\r\n" +
-				"***********************************************************************************" + "\r\n"
-			console.log(randomSong);
-		
-		})
+  if (command === "do-what-it-says") {
+    fs.readFile("random.txt", "utf8", function(error, data) {
+  
+      if (error) {
+        return console.log(error);
+      }
+      
+      var nameArr = data.split(",");
+      name = nameArr[1]
+    
+      spotify.search({ type: 'track', query: name, limit: 1 }, function(err, data) {
+        if (err) {
+          return console.log('Error occurred: ' + err);
+        }
+        
+        var track = data.tracks.items[0];
+        var randomSong =
+          "***********************************************************************************" + "\r\n" +
+          "Song Title: " + name + "\r\n" +
+          "Artist: " + track.artists[0].name + "\r\n" +
+          "Album: " + track.album.name + "\r\n" + 
+          "Preview Link: " + track.preview_url + "\r\n" +
+          "***********************************************************************************" + "\r\n"
+        console.log(randomSong);
+      
+      })
+  
+    });
+  }  
 
-	});
 }
 
 
+  switch (process.argv[2]) {
+    case "movie-this":
+      addMovie();
+      break;
 
+    case "concert-this":
+      addConcert();
+      break;
+    
+    case "spotify-this-song":
+      addSong();
+      break;
 
-
-
+    case "do-what-it-says":
+      addFiles();
+      break;
+      
+  }
+  
 
