@@ -60,17 +60,16 @@ const addConcert = () => {
 
 const addSong = () => {
 
+  for (i = 3; i < input.length; i++) {
+    name = name + " " + input[i];
+  }
 
-for (i = 3; i < input.length; i++) {
-	name = name + " " + input[i];
-}
+  name = name.trim().replace(" ", "+");
 
-name = name.trim().replace(" ", "+");
-
-if (command === "spotify-this-song") {
-	if (name === "") {
-  		name = "The Sign"
-  	}
+  if (command === "spotify-this-song") {
+    if (name === "") {
+        name = "The Sign"
+      }
 
 	spotify.search({ type: 'track', query: name, limit: 6 }, function(err, data) {
  	if (err) {
